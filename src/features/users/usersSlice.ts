@@ -17,16 +17,24 @@ export const getUsers = createAsyncThunk(
 );
 
 export const followThunk = createAsyncThunk('users/follow', async (userId: number, {dispatch}) => {
+  dispatch(isFollowing({id: userId, status: true}));
+
   const data = await usersRequests.follow(userId)
+
   if(data.resultCode === meaningOfResultCodes.Success) {
     dispatch(follow(userId))
+    dispatch(isFollowing({id: userId, status: false}));
   }
 })
 
 export const unFollowThunk = createAsyncThunk('users/unFollow', async (userId: number, {dispatch}) => {
+  dispatch(isFollowing({id: userId, status: true}))
+
   const data = await usersRequests.unFollow(userId)
+
   if(data.resultCode === meaningOfResultCodes.Success) {
     dispatch(unFollow(userId))
+    dispatch(isFollowing({id: userId, status: false}));
   }
 })
 
@@ -50,6 +58,12 @@ type InitialStateType = {
   totalCount: number
   defaultPageNumber: number
   isFetchingUsers: boolean
+  isFollowingArray: Array<number>
+}
+
+export type IsFollowingType = {
+  id: number
+  status: boolean
 }
 
 let initialState: InitialStateType = {
@@ -57,7 +71,8 @@ let initialState: InitialStateType = {
   pageSize: 10,
   totalCount: 0,
   defaultPageNumber: 1,
-  isFetchingUsers: false
+  isFetchingUsers: false,
+  isFollowingArray: []
 };
 
 const usersSlice = createSlice({
@@ -89,6 +104,13 @@ const usersSlice = createSlice({
         return user
       })
     },
+    isFollowing: (state: InitialStateType, action: PayloadAction<IsFollowingType>) => {
+      if(action.payload.status === true) {
+        state.isFollowingArray.push(action.payload.id)
+      } else {
+        state.isFollowingArray = state.isFollowingArray.filter(id => id !== action.payload.id)
+      }
+    }
   },
   extraReducers: {
     [getUsers.pending.type]: (state: InitialStateType) => {
@@ -105,5 +127,12 @@ const usersSlice = createSlice({
   },
 });
 
-export const {setUsers, setTotalCount, isFetchingUsers, follow, unFollow} = usersSlice.actions
+export const {
+  setUsers,
+  setTotalCount,
+  isFetchingUsers,
+  follow,
+  unFollow,
+  isFollowing,
+} = usersSlice.actions;
 export default usersSlice.reducer

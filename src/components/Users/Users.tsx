@@ -9,12 +9,13 @@ type PropsType = {
   users: Array<UsersType>
   totalCount: number
   isFetchingUsers: boolean
+  isFollowingArray: Array<number>
   onFetchUsers: (pageNumber: number) => void
   onFollow: (userId: number) => void
   onUnFollow: (userId: number) => void
 }
 
-const Users: React.FC<PropsType> = ({users, totalCount, onFetchUsers, isFetchingUsers, onFollow, onUnFollow}) => {
+const Users: React.FC<PropsType> = ({users, totalCount, onFetchUsers, isFetchingUsers, onFollow, onUnFollow, isFollowingArray}) => {
 
   return (
     <div>
@@ -37,11 +38,11 @@ const Users: React.FC<PropsType> = ({users, totalCount, onFetchUsers, isFetching
                     {user.name}
                   </NavLink>
                   {user.followed ? (
-                    <Button onClick={() => onUnFollow(user.id)} type={"primary"} className={usersCss.usersFollow}>
+                    <Button disabled={isFollowingArray.some(id => id === user.id)} onClick={() => onUnFollow(user.id)} type={"primary"} className={usersCss.usersFollow}>
                       Unfollow
                     </Button>
                   ) : (
-                    <Button onClick={() => onFollow(user.id)} type={"primary"} className={usersCss.usersFollow}>
+                    <Button disabled={isFollowingArray.some(id => id === user.id)} onClick={() => onFollow(user.id)} type={"primary"} className={usersCss.usersFollow}>
                       Follow
                     </Button>
                   )}
