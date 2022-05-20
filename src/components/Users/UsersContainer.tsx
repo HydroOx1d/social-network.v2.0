@@ -9,7 +9,6 @@ type MapDispatchToProps = {
   getUsers: (queryParamsForUsers: GetUsersParamsType) => void;
   followThunk: (userId: number) => void;
   unFollowThunk: (userId: number) => void;
-  isFollowing: (isFollowingParams: IsFollowingType) => void;
 };
 
 type MapStateToProps = {
@@ -23,7 +22,7 @@ type MapStateToProps = {
 
 type PropsType = MapDispatchToProps & MapStateToProps
 
-const UsersContainer: React.FC<PropsType> = ({getUsers, pageSize, defaultPageNumber, followThunk, unFollowThunk, isFollowing, ...props}) => {
+const UsersContainer: React.FC<PropsType> = ({getUsers, pageSize, defaultPageNumber, followThunk, unFollowThunk, ...props}) => {
   useEffect(() => {
     getUsers({ pageNumber: defaultPageNumber, pageSize });
   }, []);
@@ -55,5 +54,5 @@ const mapStateToProps = (state: AppStateType): MapStateToProps => {
 }
 
 export default compose(
-  connect<MapStateToProps, MapDispatchToProps,{}, AppStateType>(mapStateToProps, { getUsers, followThunk, unFollowThunk, isFollowing})
+  connect<MapStateToProps, MapDispatchToProps,{}, AppStateType>(mapStateToProps, { getUsers, followThunk, unFollowThunk})
 )(UsersContainer);
