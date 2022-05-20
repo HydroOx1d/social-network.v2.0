@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
-import { usersRequests } from '../../api/api';
+import { usersRequests, meaningOfResultCodes} from '../../api/api';
+
 
 export type GetUsersParamsType = {
   pageNumber: number,
@@ -14,6 +15,20 @@ export const getUsers = createAsyncThunk(
     dispatch(setTotalCount(data.totalCount))
   }
 );
+
+export const followThunk = createAsyncThunk('users/follow', async (userId: number, {dispatch}) => {
+  const data = await usersRequests.follow(userId)
+  if(data.resultCode === meaningOfResultCodes.Success) {
+    dispatch(follow(userId))
+  }
+})
+
+export const unFollowThunk = createAsyncThunk('users/unFollow', async (userId: number, {dispatch}) => {
+  const data = await usersRequests.unFollow(userId)
+  if(data.resultCode === meaningOfResultCodes.Success) {
+    dispatch(unFollow(userId))
+  }
+})
 
 type UserPhotosType = {
   small: string,
@@ -57,7 +72,23 @@ const usersSlice = createSlice({
     },
     isFetchingUsers: (state: InitialStateType, action: PayloadAction<boolean>) => {
       state.isFetchingUsers = action.payload
-    }
+    },
+    follow: (state: InitialStateType, action: PayloadAction<number>) => {
+      state.users = state.users.map(user => {
+        if(user.id === action.payload) {
+          user.followed = true
+        }
+        return user
+      })
+    },
+    unFollow: (state: InitialStateType, action: PayloadAction<number>) => {
+      state.users = state.users.map(user => {
+        if(user.id === action.payload) {
+          user.followed = false
+        }
+        return user
+      })
+    },
   },
   extraReducers: {
     [getUsers.pending.type]: (state: InitialStateType) => {
@@ -67,8 +98,12 @@ const usersSlice = createSlice({
       state.isFetchingUsers = false;
     },
     [getUsers.rejected.type]: () => console.log("rejected"),
+
+    [followThunk.pending.type]: () => console.log('following'),
+    [followThunk.fulfilled.type]: () => console.log('followed'),
+    [followThunk.rejected.type]: () => console.log('non-followed'),
   },
 });
 
-export const {setUsers, setTotalCount, isFetchingUsers} = usersSlice.actions
+export const {setUsers, setTotalCount, isFetchingUsers, follow, unFollow} = usersSlice.actions
 export default usersSlice.reducer

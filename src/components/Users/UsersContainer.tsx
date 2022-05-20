@@ -2,12 +2,14 @@ import React, { useEffect } from 'react'
 import Users from './Users'
 import { compose } from '@reduxjs/toolkit'
 import { connect } from 'react-redux'
-import { getUsers, UsersType, GetUsersParamsType } from '../../features/users/usersSlice';
+import { getUsers, followThunk, unFollowThunk, UsersType, GetUsersParamsType } from '../../features/users/usersSlice';
 import { AppStateType } from '../../store/store';
 
 type MapDispatchToProps = {
-  getUsers: (queryParamsForUsers: GetUsersParamsType) => void
-}
+  getUsers: (queryParamsForUsers: GetUsersParamsType) => void;
+  followThunk: (userId: number) => void;
+  unFollowThunk: (userId: number) => void;
+};
 
 type MapStateToProps = {
   users: Array<UsersType>
@@ -19,7 +21,7 @@ type MapStateToProps = {
 
 type PropsType = MapDispatchToProps & MapStateToProps
 
-const UsersContainer: React.FC<PropsType> = ({getUsers, pageSize, defaultPageNumber, ...props}) => {
+const UsersContainer: React.FC<PropsType> = ({getUsers, pageSize, defaultPageNumber, followThunk, unFollowThunk, ...props}) => {
   useEffect(() => {
     getUsers({ pageNumber: defaultPageNumber, pageSize });
   }, []);
@@ -28,7 +30,15 @@ const UsersContainer: React.FC<PropsType> = ({getUsers, pageSize, defaultPageNum
     getUsers( {pageNumber, pageSize} );
   }
 
-  return <Users {...props} onFetchUsers={onFetchUsers} />;
+  const onFollow = (userId: number) => {
+    followThunk( userId );
+  }
+
+  const onUnFollow = (userId: number) => {
+    unFollowThunk( userId );
+  }
+
+  return <Users {...props} onFetchUsers={onFetchUsers} onFollow={onFollow} onUnFollow={onUnFollow} />;
 }
 
 const mapStateToProps = (state: AppStateType): MapStateToProps => {
@@ -41,4 +51,4 @@ const mapStateToProps = (state: AppStateType): MapStateToProps => {
   }
 }
 
-export default compose(connect(mapStateToProps, { getUsers }))(UsersContainer);
+export default compose(connect(mapStateToProps, { getUsers, followThunk, unFollowThunk}))(UsersContainer);
