@@ -47,8 +47,10 @@ const mapStateToProps = (state: AppStateType): MapStateToProps => {
     totalCount: state.users.totalCount,
     pageSize: state.users.pageSize,
     defaultPageNumber: state.users.defaultPageNumber,
-    isFetchingUsers: state.users.isFetchingUsers
+    isFetchingUsers: state.users.isFetchingUsers,
   }
 }
 
-export default compose(connect(mapStateToProps, { getUsers, followThunk, unFollowThunk}))(UsersContainer);
+export default compose(
+  connect<MapStateToProps, MapDispatchToProps,{}, AppStateType>(mapStateToProps, { getUsers, followThunk, unFollowThunk})
+)(UsersContainer);
