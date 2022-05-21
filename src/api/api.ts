@@ -37,3 +37,19 @@ export const usersRequests = {
     return instanceOfAxios.delete<FollowType>(`/follow/${userId}`).then(res => res.data);
   }
 }
+
+type AuthMeType = {
+  resultCode: number
+  messages: Array<string>
+  data: {
+    id: number
+    email: string
+    login: string
+  }
+}
+
+export const authRequests = {
+  authMe() {
+    return instanceOfAxios.get<AuthMeType>('/auth/me').then(res => res.data);
+  }
+}

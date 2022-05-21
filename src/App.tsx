@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useEffect } from "react";
 import "./App.css";
 import "antd/dist/antd.css";
 import SiderComponent from "./components/Sider/SiderComponent";
@@ -7,10 +7,23 @@ import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import Messages from "./components/Messagess/Messages";
 import UsersContainer from "./components/Users/UsersContainer";
+import { connect } from "react-redux";
+import { getIsAuth } from './features/auth/authSlice';
+import { AppStateType } from './store/store';
 
 const { Header, Content, Footer } = Layout;
 
-const App: React.FC = () => {
+type MapDispatchToPropsType = {
+  getIsAuth: () => void;
+}
+
+type PropsType = MapDispatchToPropsType
+
+const App: React.FC<PropsType> = ({getIsAuth}) => {
+
+  useEffect(() => {
+    getIsAuth()
+  }, [])
 
   return (
     <Router>
@@ -43,4 +56,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default connect<{}, MapDispatchToPropsType, {}, AppStateType>(null, {getIsAuth})(App);
