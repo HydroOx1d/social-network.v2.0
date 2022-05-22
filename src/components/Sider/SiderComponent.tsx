@@ -44,7 +44,7 @@ const items: MenuItem[] = [
 const SiderComponent: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const {pathname} = useLocation();
-  let pathnameModified = pathname.slice(1)
+  let pathnameModified = pathname.slice(1, -6);
 
   const onCollapse = (collapsed: boolean) => {
     console.log(collapsed);

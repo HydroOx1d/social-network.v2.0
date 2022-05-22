@@ -10,8 +10,9 @@ import UsersContainer from "./components/Users/UsersContainer";
 import { connect } from "react-redux";
 import { getIsAuth } from './features/auth/authSlice';
 import { AppStateType } from './store/store';
+import HeaderContainer from "./components/Header/HeaderContainer";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 type MapDispatchToPropsType = {
   getIsAuth: () => void;
@@ -31,9 +32,7 @@ const App: React.FC<PropsType> = ({getIsAuth}) => {
         <SiderComponent />
 
         <Layout className="site-layout">
-          <Header className="site-layout-background" style={{ padding: 0 }}>
-            <h2 className="header__logo">Social Network</h2>
-          </Header>
+          <HeaderContainer />
           <Content style={{ margin: "0 16px" }}>
             <Breadcrumb style={{ margin: "16px 0" }}>
               <Breadcrumb.Item>User</Breadcrumb.Item>
@@ -42,7 +41,10 @@ const App: React.FC<PropsType> = ({getIsAuth}) => {
 
             <Routes>
               <Route path="/" element={<Navigate to="/profile" />} />
-              <Route path="/profile/*" element={<ProfileContainer />} />
+              <Route path="/profile">
+                <Route index element={<ProfileContainer />} />
+                <Route path=":userId" element={<ProfileContainer />} />
+              </Route>
               <Route path="/messages" element={<Messages />} />
               <Route path="/users" element={<UsersContainer />} />
             </Routes>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { UsersType } from '../features/users/usersSlice';
+import { ProfileDataType } from '../types/types';
 
 let instanceOfAxios = axios.create({
   withCredentials: true,
@@ -51,5 +52,11 @@ type AuthMeType = {
 export const authRequests = {
   authMe() {
     return instanceOfAxios.get<AuthMeType>('/auth/me').then(res => res.data);
+  }
+}
+
+export const profileRequests = {
+  getProfileData(userId: string | undefined) {
+    return instanceOfAxios.get<ProfileDataType>(`/profile/${userId}`).then(res => res.data)
   }
 }
