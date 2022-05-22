@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { getIsAuth } from './features/auth/authSlice';
 import { AppStateType } from './store/store';
 import HeaderContainer from "./components/Header/HeaderContainer";
+import LoginContainer from "./components/Login/LoginContainer";
 
 const { Content, Footer } = Layout;
 
@@ -47,6 +48,7 @@ const App: React.FC<PropsType> = ({getIsAuth}) => {
               </Route>
               <Route path="/messages" element={<Messages />} />
               <Route path="/users" element={<UsersContainer />} />
+              <Route path="/login" element={<LoginContainer />} />
             </Routes>
           </Content>
           <Footer style={{ textAlign: "center" }}>

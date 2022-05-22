@@ -23,3 +23,10 @@ export type ProfileDataType = {
   contacts: ProfileDataContactsType;
   photos: ProfileDataPhotosType
 };
+
+
+export type LoginValuesType = {
+  password: string;
+  remember: boolean;
+  email: string;
+};

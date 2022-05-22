@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { UsersType } from '../features/users/usersSlice';
-import { ProfileDataType } from '../types/types';
+import { LoginValuesType, ProfileDataType } from '../types/types';
 
 let instanceOfAxios = axios.create({
   withCredentials: true,
@@ -49,9 +49,20 @@ type AuthMeType = {
   }
 }
 
+type LoginResponseType = {
+  resultCode: number;
+  messages: Array<string>;
+  data: {
+    userId: number
+  };
+};
+
 export const authRequests = {
   authMe() {
     return instanceOfAxios.get<AuthMeType>('/auth/me').then(res => res.data);
+  },
+  login(loginData: LoginValuesType) {
+    return instanceOfAxios.post<LoginResponseType>('/auth/login', loginData).then(res => res.data)
   }
 }
 

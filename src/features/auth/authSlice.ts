@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { authRequests, meaningOfResultCodes } from '../../api/api';
+import { LoginValuesType } from '../../types/types';
 
 
 export const getIsAuth = createAsyncThunk('auth/getIsAuth', async (_, {dispatch}) => {
@@ -7,6 +8,14 @@ export const getIsAuth = createAsyncThunk('auth/getIsAuth', async (_, {dispatch}
   
   if(data.resultCode === meaningOfResultCodes.Success) {
     dispatch(setAuthData(data.data));
+  }
+})
+
+export const loginThunk = createAsyncThunk('auth/loginThunk', async (loginData: LoginValuesType, {dispatch}) => {
+  const data = await authRequests.login(loginData);
+
+  if(data.resultCode === meaningOfResultCodes.Success) {
+    dispatch(getIsAuth())
   }
 })
 
