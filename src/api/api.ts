@@ -16,7 +16,7 @@ type GetUsersType = {
   error: null | string;
 };
 
-type FollowType = {
+type StandartResponse = {
   resultCode: number
   messages: string[]
   data: object
@@ -32,10 +32,10 @@ export const usersRequests = {
     return instanceOfAxios.get<GetUsersType>(`/users?count=${pageCount}&page=${pageNumber}`).then(res => res.data);
   },
   follow(userId: number) {
-    return instanceOfAxios.post<FollowType>(`/follow/${userId}`).then(res => res.data); 
+    return instanceOfAxios.post<StandartResponse>(`/follow/${userId}`).then(res => res.data); 
   },
   unFollow(userId: number) {
-    return instanceOfAxios.delete<FollowType>(`/follow/${userId}`).then(res => res.data);
+    return instanceOfAxios.delete<StandartResponse>(`/follow/${userId}`).then(res => res.data);
   }
 }
 
@@ -63,6 +63,9 @@ export const authRequests = {
   },
   login(loginData: LoginValuesType) {
     return instanceOfAxios.post<LoginResponseType>('/auth/login', loginData).then(res => res.data)
+  },
+  logout() {
+    return instanceOfAxios.delete<StandartResponse>('/auth/login').then(res => res.data);
   }
 }
 

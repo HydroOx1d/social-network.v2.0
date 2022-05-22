@@ -6,41 +6,15 @@ import { NavLink } from 'react-router-dom';
 
 const {Header} = Layout
 
-const menu = (
-  <Menu
-    items={[
-      {
-        label: (
-          <span>Logout</span>
-        ),
-        key: "0",
-      },
-      // {
-      //   label: (
-      //     <a
-      //       target="_blank"
-      //       rel="noopener noreferrer"
-      //       href="https://www.aliyun.com"
-      //     >
-      //       2nd menu item
-      //     </a>
-      //   ),
-      //   key: "1",
-      // },
-
-      // {
-      //   type: "divider",
-      // },
-    ]}
-  />
-);
 
 type PropsType = {
-  isAuth: boolean
-  login: string | null
-}
+  isAuth: boolean;
+  login: string | null;
 
-const HeaderP: React.FC<PropsType> = ({isAuth, login}) => {
+  onLogout: () => void
+};
+
+const HeaderP: React.FC<PropsType> = ({isAuth, login, onLogout}) => {
   return (
     <Header className="site-layout-background" style={{ padding: 0 }}>
       <div className={header.headerBody}>
@@ -49,7 +23,18 @@ const HeaderP: React.FC<PropsType> = ({isAuth, login}) => {
         {isAuth ? (
           <div className={header.headerLogin}>
             <Avatar className={header.headerAvatar} icon={<UserOutlined />} />
-            <Dropdown overlay={menu}>
+            <Dropdown
+              overlay={() => (
+                <Menu
+                  items={[
+                    {
+                      key: "1",
+                      label: <span onClick={() => onLogout()}>Logout</span>,
+                    },
+                  ]}
+                />
+              )}
+            >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
                   {login}
@@ -59,7 +44,9 @@ const HeaderP: React.FC<PropsType> = ({isAuth, login}) => {
             </Dropdown>
           </div>
         ) : (
-          <NavLink className={header.loginLink} to={'/login'}>Login</NavLink>
+          <NavLink className={header.loginLink} to={"/login"}>
+            Login
+          </NavLink>
         )}
       </div>
     </Header>

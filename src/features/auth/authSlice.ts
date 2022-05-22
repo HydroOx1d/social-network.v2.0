@@ -19,6 +19,14 @@ export const loginThunk = createAsyncThunk('auth/loginThunk', async (loginData: 
   }
 })
 
+export const logoutThunk = createAsyncThunk('auth/logoutThunk', async (_, {dispatch}) => {
+  const data = await authRequests.logout();
+
+  if(data.resultCode === meaningOfResultCodes.Success) {
+    dispatch(deleteAuthData());
+  }
+})
+
 type InitialStateType = {
   isAuth: boolean
   id: null | number
@@ -34,7 +42,7 @@ const initialState: InitialStateType = {
   login: null,
 }
 
-type setAuthDataActionType = {
+type AuthDataActionType = {
   id: number
   login: string
   email: string
@@ -46,7 +54,7 @@ const authSlice = createSlice({
   reducers: {
     setAuthData: (
       state: InitialStateType,
-      action: PayloadAction<setAuthDataActionType>
+      action: PayloadAction<AuthDataActionType>
     ) => {
       const {id, email, login} = action.payload;
 
@@ -56,6 +64,13 @@ const authSlice = createSlice({
 
       state.isAuth = true
     },
+    deleteAuthData: (state: InitialStateType) => {
+      state.email = null;
+      state.id = null;
+      state.login = null;
+
+      state.isAuth = false
+    }
   },
   extraReducers: {
     [getIsAuth.pending.type]: () => console.log("pending"),
@@ -64,6 +79,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {setAuthData} = authSlice.actions
+export const { setAuthData, deleteAuthData } = authSlice.actions;
 
 export default authSlice.reducer

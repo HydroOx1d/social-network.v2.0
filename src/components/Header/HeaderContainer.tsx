@@ -3,6 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import HeaderP from './Header'
 import { AppStateType } from '../../store/store';
+import { logoutThunk } from '../../features/auth/authSlice';
 
 type MapStateToPropsType = {
   isAuth: boolean
@@ -10,13 +11,17 @@ type MapStateToPropsType = {
 }
 
 type MapDispatchToProps = {
-
-}
+  logoutThunk: () => void
+};
 
 type PropsType = MapStateToPropsType & MapDispatchToProps
 
-const HeaderContainer: React.FC<PropsType> = ({...props}) => {
-  return <HeaderP {...props}/> 
+const HeaderContainer: React.FC<PropsType> = ({logoutThunk,...props}) => {
+  const onLogout = () => {
+    logoutThunk()
+  }
+
+  return <HeaderP {...props} onLogout={onLogout} />; 
 }
 
 const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
@@ -27,5 +32,5 @@ const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
 }
 
 export default compose(
-  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(mapStateToProps)
+  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {logoutThunk})
 )(HeaderContainer);
