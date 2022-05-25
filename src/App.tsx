@@ -2,7 +2,8 @@ import React , { useEffect } from "react";
 import "./App.css";
 import "antd/dist/antd.css";
 import SiderComponent from "./components/Sider/SiderComponent";
-import { Layout, Breadcrumb } from "antd";
+import { Layout, Breadcrumb, Spin } from "antd";
+import { LoadingOutlined } from '@ant-design/icons'
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
 import ProfileContainer from "./components/Profile/ProfileContainer";
 import Messages from "./components/Messagess/Messages";
@@ -19,13 +20,38 @@ type MapDispatchToPropsType = {
   getIsAuth: () => void;
 }
 
-type PropsType = MapDispatchToPropsType
+type MapStateToPropsType = {
+  initializedApp: boolean
+}
 
-const App: React.FC<PropsType> = ({getIsAuth}) => {
+type PropsType = MapDispatchToPropsType & MapStateToPropsType;
 
+const App: React.FC<PropsType> = ({getIsAuth, initializedApp}) => {
   useEffect(() => {
     getIsAuth()
   }, [])
+
+  const mainLoading = (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        background: "#fff",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Spin indicator={<LoadingOutlined style={{ fontSize: "100px" }} />} />
+    </div>
+  );
+
+  if(!initializedApp) {
+    return mainLoading;
+  }
 
   return (
     <Router>
@@ -44,7 +70,10 @@ const App: React.FC<PropsType> = ({getIsAuth}) => {
               <Route path="/" element={<Navigate to="/profile" />} />
               <Route path="/profile">
                 <Route index element={<ProfileContainer />} />
-                <Route path=":userId" element={<ProfileContainer />} />
+                <Route
+                  path=":userId"
+                  element={<ProfileContainer />}
+                />
               </Route>
               <Route path="/messages" element={<Messages />} />
               <Route path="/users" element={<UsersContainer />} />
@@ -60,4 +89,15 @@ const App: React.FC<PropsType> = ({getIsAuth}) => {
   );
 };
 
-export default connect<{}, MapDispatchToPropsType, {}, AppStateType>(null, {getIsAuth})(App);
+const mapStateToProps = (state: AppStateType) => {
+  return {
+    initializedApp: state.auth.initializedApp
+  }
+}
+
+export default connect<
+  MapStateToPropsType,
+  MapDispatchToPropsType,
+  {},
+  AppStateType
+>(mapStateToProps, { getIsAuth })(App);

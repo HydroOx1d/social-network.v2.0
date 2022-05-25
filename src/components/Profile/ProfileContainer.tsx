@@ -6,6 +6,7 @@ import { compose } from '@reduxjs/toolkit';
 import { PostsType, getProfileDataThunk } from '../../features/profile/profileSlice';
 import { useParams } from 'react-router-dom';
 import { ProfileDataType } from '../../types/types';
+import { requireAuth } from '../../hoc/requireAuth';
 
 type MapStateToPropsType = {
   posts: Array<PostsType>;
@@ -42,5 +43,6 @@ const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
 };
 
 export default compose(
-  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {getProfileDataThunk})
+  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {getProfileDataThunk}),
+  requireAuth,
 )(ProfileContainer);

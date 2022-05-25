@@ -32,6 +32,8 @@ type InitialStateType = {
   id: null | number
   email: null | string
   login: null | string
+
+  initializedApp: boolean
 }
 
 const initialState: InitialStateType = {
@@ -40,6 +42,7 @@ const initialState: InitialStateType = {
   id: null,
   email: null,
   login: null,
+  initializedApp: false
 }
 
 type AuthDataActionType = {
@@ -74,7 +77,9 @@ const authSlice = createSlice({
   },
   extraReducers: {
     [getIsAuth.pending.type]: () => console.log("pending"),
-    [getIsAuth.fulfilled.type]: () => console.log("fulfilled"),
+    [getIsAuth.fulfilled.type]: (state: InitialStateType) => {
+      state.initializedApp = true
+    },
     [getIsAuth.rejected.type]: () => console.log("rejected"),
   },
 });

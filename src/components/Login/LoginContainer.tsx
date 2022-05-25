@@ -4,9 +4,10 @@ import Login from './Login';
 import { loginThunk } from '../../features/auth/authSlice';
 import { LoginValuesType } from '../../types/types';
 import { AppStateType } from '../../store/store';
+import { Navigate } from 'react-router-dom';
 
 type MapStateToPropsType = {
-
+  isAuth: boolean
 }
 
 type MapDispatchToPropsType = {
@@ -15,12 +16,22 @@ type MapDispatchToPropsType = {
 
 type PropsType = MapStateToPropsType & MapDispatchToPropsType
 
-const LoginContainer: React.FC<PropsType> = ({loginThunk}) => {
+const LoginContainer: React.FC<PropsType> = ({loginThunk, isAuth}) => {
   const onLogin = (loginData: LoginValuesType) => {
     loginThunk(loginData)
+  }
+
+  if(isAuth) {
+    return <Navigate to="/profile"/>
   }
 
   return <Login onLogin={onLogin} />;
 }
 
-export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppStateType>(null, {loginThunk})(LoginContainer)
+const mapStateToProps = (state: AppStateType) => {
+  return {
+    isAuth: state.auth.isAuth
+  }
+}
+
+export default connect<MapStateToPropsType, MapDispatchToPropsType, {}, AppStateType>(mapStateToProps, {loginThunk})(LoginContainer)
