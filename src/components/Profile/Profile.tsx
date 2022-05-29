@@ -3,17 +3,17 @@ import profile from './Profile.module.css'
 import { Avatar } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import ProfileAddPostContainer from './ProfileAddPost/ProfileAddPostContainer';
-import ProfileStatus from './ProfileStatus/ProfileStatus';
 import { PostsType } from '../../features/profile/profileSlice';
 import { ProfileDataType } from '../../types/types';
+import ProfileStatusContainer from './ProfileStatus/ProfileStatusContainer';
 
 type PropsType = {
   posts: Array<PostsType>;
   profileData: ProfileDataType | null
+  isOwn: boolean
 };
 
-const Profile: React.FC<PropsType> = ({ posts, profileData }) => {
-
+const Profile: React.FC<PropsType> = ({ posts, profileData, isOwn }) => {
   return (
     <div className={profile.profile}>
       <div className={profile.leftSide}>
@@ -57,7 +57,7 @@ const Profile: React.FC<PropsType> = ({ posts, profileData }) => {
       <div className={profile.rightSide}>
         <div className={profile.profileHeader}>
           <h2 className={profile.profileName}>{profileData?.fullName}</h2>
-          <ProfileStatus />
+          <ProfileStatusContainer isOwn={isOwn} />
         </div>
         <hr />
         <ProfileAddPostContainer />
