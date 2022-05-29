@@ -62,7 +62,7 @@ export const authRequests = {
     return instanceOfAxios.get<AuthMeType>('/auth/me').then(res => res.data);
   },
   login(loginData: LoginValuesType) {
-    return instanceOfAxios.post<LoginResponseType>('/auth/login', loginData).then(res => res.data)
+    return instanceOfAxios.post<LoginResponseType>('/auth/login', loginData).then(res => res.data);
   },
   logout() {
     return instanceOfAxios.delete<StandartResponse>('/auth/login').then(res => res.data);
@@ -71,6 +71,13 @@ export const authRequests = {
 
 export const profileRequests = {
   getProfileData(userId: string | undefined) {
-    return instanceOfAxios.get<ProfileDataType>(`/profile/${userId}`).then(res => res.data)
-  }
-}
+    return instanceOfAxios
+      .get<ProfileDataType>(`/profile/${userId}`)
+      .then((res) => res.data);
+  },
+  getProfileStatus(userId: undefined | string) {
+    return instanceOfAxios
+      .get<string>(`/profile/status/${userId}`)
+      .then((res) => res.data);
+  },
+};
