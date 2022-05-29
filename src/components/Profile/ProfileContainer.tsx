@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 import { AppStateType } from '../../store/store';
 import Profile from './Profile';
 import { compose } from '@reduxjs/toolkit';
-import { PostsType, getProfileDataThunk } from '../../features/profile/profileSlice';
-import { useParams } from 'react-router-dom';
+import {
+  PostsType,
+  getProfileDataThunk,
+  getProfileStatusThunk,
+} from "../../features/profile/profileSlice";
+import { useNavigate, useParams } from 'react-router-dom';
 import { ProfileDataType } from '../../types/types';
-import { requireAuth } from '../../hoc/requireAuth';
 
 type MapStateToPropsType = {
   posts: Array<PostsType>;
@@ -16,22 +19,27 @@ type MapStateToPropsType = {
 
 type MapDispatchToProps = {
   getProfileDataThunk: (userId: undefined | string) => void;
+  getProfileStatusThunk: (userId: undefined | string) => void;
 };
 
 export type ProfilePropsType = MapStateToPropsType & MapDispatchToProps
 
-const ProfileContainer: React.FC<ProfilePropsType> = ({ posts, getProfileDataThunk, id, ...props}) => {
+const ProfileContainer: React.FC<ProfilePropsType> = ({ posts, getProfileDataThunk, getProfileStatusThunk, id, ...props}) => {
   let {userId} = useParams();
-  
-  if(userId === undefined) {
-    userId = id?.toString()
-  }
-  
-  useEffect(() => {
-    getProfileDataThunk(userId)
+  let navigate = useNavigate();
+
+  useEffect(() => {  
+    if (!userId) {
+      userId = id?.toString();
+      if(!userId) {
+        navigate('/login');
+      }
+    }
+    getProfileDataThunk(userId);
+    getProfileStatusThunk(userId);
   }, [userId])
 
-  return <Profile posts={posts} {...props} />;
+  return <Profile isOwn={!userId} posts={posts} {...props} />;
 };
 
 const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
@@ -43,6 +51,5 @@ const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
 };
 
 export default compose(
-  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {getProfileDataThunk}),
-  requireAuth,
+  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {getProfileDataThunk, getProfileStatusThunk}),
 )(ProfileContainer);
