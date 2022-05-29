@@ -7,6 +7,11 @@ export const getProfileDataThunk = createAsyncThunk("profile/getProfileDataThunk
   dispatch(setProfileData(data));
 });
 
+export const getProfileStatusThunk = createAsyncThunk("profile/getProfileStatusThunk", async (userId: undefined | string, {dispatch}) => {
+  const data = await profileRequests.getProfileStatus(userId);
+  dispatch(setStatus(data));
+});
+
 export type PostsType = {
   id: number
   text: string
@@ -15,13 +20,13 @@ export type PostsType = {
 type InitialStateType = {
   posts: Array<PostsType>
   profileData: ProfileDataType | null
-  // status: string
+  status: string
 }
 
 const initialState: InitialStateType = {
   posts: [],
-  profileData: null
-  // status: '',
+  profileData: null,
+  status: '',
 };
 
 const profileSlice = createSlice({
@@ -33,13 +38,13 @@ const profileSlice = createSlice({
     },
     setProfileData: (state: InitialStateType, action: PayloadAction<ProfileDataType>) => {
       state.profileData = action.payload
+    },
+    setStatus: (state: InitialStateType, action: PayloadAction<string>) => {
+      state.status = action.payload
     }
-    // setStatus: (state: InitialStateType, action: PayloadAction<string>) => {
-    //   state.status = action.payload
-    // }
   }
 });
 
 
-export const { addPost, setProfileData } = profileSlice.actions;
+export const { addPost, setProfileData, setStatus } = profileSlice.actions;
 export default profileSlice.reducer
