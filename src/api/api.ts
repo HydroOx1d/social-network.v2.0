@@ -75,9 +75,12 @@ export const profileRequests = {
       .get<ProfileDataType>(`/profile/${userId}`)
       .then((res) => res.data);
   },
-  getProfileStatus(userId: undefined | string) {
+  getProfileStatus(userId: null | undefined | string) {
     return instanceOfAxios
       .get<string>(`/profile/status/${userId}`)
       .then((res) => res.data);
   },
+  updateProfileStatus(status: string) {
+    return instanceOfAxios.put<StandartResponse>('/profile/status', {status}).then(res => res.data);
+  }
 };

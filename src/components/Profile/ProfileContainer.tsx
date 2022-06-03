@@ -19,7 +19,7 @@ type MapStateToPropsType = {
 
 type MapDispatchToProps = {
   getProfileDataThunk: (userId: undefined | string) => void;
-  getProfileStatusThunk: (userId: undefined | string) => void;
+  getProfileStatusThunk: (userId: null | undefined | string) => void;
 };
 
 export type ProfilePropsType = MapStateToPropsType & MapDispatchToProps

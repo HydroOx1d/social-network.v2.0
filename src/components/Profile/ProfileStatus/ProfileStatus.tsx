@@ -4,11 +4,13 @@ import { Input } from 'antd'
 
 
 type PropsType = {
-  isOwn: boolean
-  status: string
-}
+  isOwn: boolean;
+  status: string;
 
-const ProfileStatus: React.FC<PropsType> = ({isOwn, status}) => {
+  onUpdateStatus: (status: string) => void
+};
+
+const ProfileStatus: React.FC<PropsType> = ({isOwn, status, onUpdateStatus}) => {
   const [statusEditMode, setStatusEditMode] = useState<boolean>(false);
   const [statusValue, setStatusValue] = useState<string>(status);
 
@@ -19,9 +21,12 @@ const ProfileStatus: React.FC<PropsType> = ({isOwn, status}) => {
       {statusEditMode && isOwn && (
         <div className={statusSC.statusInput}>
           <Input
-            onBlur={() => setStatusEditMode(false)}
+            onBlur={() => {
+              onUpdateStatus(statusValue)
+              setStatusEditMode(false)
+            }}
             autoFocus={true}
-            maxLength={50}
+            maxLength={300}
             showCount={true}
             value={statusValue}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStatusValue(e.target.value)}

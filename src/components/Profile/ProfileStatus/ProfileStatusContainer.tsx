@@ -2,6 +2,7 @@ import React from 'react';
 import ProfileStatus from './ProfileStatus';
 import {connect} from 'react-redux';
 import { AppStateType } from '../../../store/store';
+import { updateProfileStatusThunk } from '../../../features/profile/profileSlice';
 
 type PropsFromOutside = {
   isOwn: boolean;
@@ -11,12 +12,20 @@ type MapStateToPropsType = {
   status: string
 }
 
-type MapDispatchToProps = {}
+type MapDispatchToProps = {
+  updateProfileStatusThunk: (status: string) => void;
+};
 
 type PropsType = PropsFromOutside & MapStateToPropsType & MapDispatchToProps;
 
-const ProfileStatusContainer: React.FC<PropsType> = ({isOwn, ...props}) => {
-  return <ProfileStatus isOwn={isOwn} {...props}/>
+const ProfileStatusContainer: React.FC<PropsType> = ({isOwn, updateProfileStatusThunk, ...props}) => {
+  const onUpdateStatus = (status: string) => {
+    updateProfileStatusThunk(status);
+  }
+  
+  return (
+    <ProfileStatus isOwn={isOwn} onUpdateStatus={onUpdateStatus} {...props} />
+  );
 }
 
 const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
@@ -30,4 +39,4 @@ export default connect<
   MapDispatchToProps,
   {},
   AppStateType
->(mapStateToProps)(ProfileStatusContainer);
+>(mapStateToProps, { updateProfileStatusThunk })(ProfileStatusContainer);
