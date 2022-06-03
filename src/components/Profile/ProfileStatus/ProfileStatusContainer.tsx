@@ -10,6 +10,7 @@ type PropsFromOutside = {
 
 type MapStateToPropsType = {
   status: string
+  isUpdatingStatus: boolean
 }
 
 type MapDispatchToProps = {
@@ -22,7 +23,7 @@ const ProfileStatusContainer: React.FC<PropsType> = ({isOwn, updateProfileStatus
   const onUpdateStatus = (status: string) => {
     updateProfileStatusThunk(status);
   }
-  
+
   return (
     <ProfileStatus isOwn={isOwn} onUpdateStatus={onUpdateStatus} {...props} />
   );
@@ -30,7 +31,8 @@ const ProfileStatusContainer: React.FC<PropsType> = ({isOwn, updateProfileStatus
 
 const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
   return {
-    status: state.profile.status
+    status: state.profile.status,
+    isUpdatingStatus: state.profile.isUpdatingStatus,
   }
 }
 

@@ -5,12 +5,13 @@ import { Input } from 'antd'
 
 type PropsType = {
   isOwn: boolean;
+  isUpdatingStatus: boolean
   status: string;
 
   onUpdateStatus: (status: string) => void
 };
 
-const ProfileStatus: React.FC<PropsType> = ({isOwn, status, onUpdateStatus}) => {
+const ProfileStatus: React.FC<PropsType> = ({isOwn, status, onUpdateStatus, isUpdatingStatus}) => {
   const [statusEditMode, setStatusEditMode] = useState<boolean>(false);
   const [statusValue, setStatusValue] = useState<string>(status);
 
@@ -35,6 +36,7 @@ const ProfileStatus: React.FC<PropsType> = ({isOwn, status, onUpdateStatus}) => 
       )}
       {!statusEditMode && (
         <span
+        style={isUpdatingStatus ? {opacity: 0.5} : {opacity: 1}}
           className={statusSC.statusText}
           onDoubleClick={() => (isOwn ? setStatusEditMode(true) : false)}
         >

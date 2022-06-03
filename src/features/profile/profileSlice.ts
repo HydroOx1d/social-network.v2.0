@@ -30,15 +30,17 @@ export type PostsType = {
 }
 
 type InitialStateType = {
-  posts: Array<PostsType>
-  profileData: ProfileDataType | null
-  status: string
-}
+  posts: Array<PostsType>;
+  profileData: ProfileDataType | null;
+  status: string;
+  isUpdatingStatus: boolean
+};
 
 const initialState: InitialStateType = {
   posts: [],
   profileData: null,
   status: '',
+  isUpdatingStatus: false
 };
 
 const profileSlice = createSlice({
@@ -54,6 +56,15 @@ const profileSlice = createSlice({
     setStatus: (state: InitialStateType, action: PayloadAction<string>) => {
       state.status = action.payload
     }
+  },
+  extraReducers: {
+    [getProfileStatusThunk.pending.type]: (state: InitialStateType) => {
+      state.isUpdatingStatus = true
+    },
+    [getProfileStatusThunk.fulfilled.type]: (state: InitialStateType) => {
+      state.isUpdatingStatus = false
+    },
+    [getProfileStatusThunk.rejected.type]: () => console.log('get profile status: rejected'),
   }
 });
 
