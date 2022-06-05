@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { authRequests, meaningOfResultCodes } from '../../api/api';
-import { LoginValuesType } from '../../types/types';
+import { HandleErrorType, LoginValuesType } from '../../types/types';
 
 
 export const getIsAuth = createAsyncThunk('auth/getIsAuth', async (_, {dispatch}) => {
@@ -13,6 +13,10 @@ export const getIsAuth = createAsyncThunk('auth/getIsAuth', async (_, {dispatch}
 
 export const loginThunk = createAsyncThunk('auth/loginThunk', async (loginData: LoginValuesType, {dispatch}) => {
   const data = await authRequests.login(loginData);
+
+  if(data.resultCode === meaningOfResultCodes.Error) {
+    dispatch(handleAuthError({status: true, message: data.messages[0]}));
+  }
 
   if(data.resultCode === meaningOfResultCodes.Success) {
     dispatch(getIsAuth())
@@ -33,6 +37,9 @@ type InitialStateType = {
   email: null | string
   login: null | string
 
+  isError: boolean
+  errorText: string
+
   initializedApp: boolean
 }
 
@@ -42,6 +49,10 @@ const initialState: InitialStateType = {
   id: null,
   email: null,
   login: null,
+
+  isError: false,
+  errorText: '',
+
   initializedApp: false
 }
 
@@ -73,6 +84,10 @@ const authSlice = createSlice({
       state.login = null;
 
       state.isAuth = false
+    },
+    handleAuthError: (state: InitialStateType, action: PayloadAction<HandleErrorType>) => {
+      state.isError = action.payload.status;
+      state.errorText = action.payload.message;
     }
   },
   extraReducers: {
@@ -84,6 +99,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAuthData, deleteAuthData } = authSlice.actions;
+export const { setAuthData, deleteAuthData, handleAuthError } = authSlice.actions;
 
 export default authSlice.reducer

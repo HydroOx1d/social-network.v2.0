@@ -6,10 +6,13 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { LoginValuesType } from '../../types/types';
 
 type PropsType = {
+  isError: boolean
+  errorText: string
+
   onLogin: (loginData: LoginValuesType) => void
 }
 
-const Login: React.FC<PropsType> = ({onLogin}) => {
+const Login: React.FC<PropsType> = ({onLogin, isError, errorText}) => {
   const onFinish = (values: LoginValuesType) => {
     onLogin(values)
   };
@@ -19,7 +22,7 @@ const Login: React.FC<PropsType> = ({onLogin}) => {
       <Form
         name="normal_login"
         className={login.loginForm}
-        initialValues={{ remember: true }}
+        initialValues={{ rememberMe: true }}
         onFinish={onFinish}
       >
         <Form.Item
@@ -42,7 +45,7 @@ const Login: React.FC<PropsType> = ({onLogin}) => {
           />
         </Form.Item>
         <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
+          <Form.Item name="rememberMe" valuePropName="checked" noStyle>
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
@@ -62,6 +65,11 @@ const Login: React.FC<PropsType> = ({onLogin}) => {
           Or <a href="">register now!</a>
         </Form.Item>
       </Form>
+      {isError && (
+        <div className={login.loginError}>
+          <div className={login.loginErrorText}>{errorText}</div>
+        </div>
+      )}
     </div>
   );
 };

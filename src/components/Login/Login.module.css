@@ -1,11 +1,11 @@
 .login {
-  max-width: 450px;
+  max-width: 350px;
   margin: 0 auto;
 }
 
-.loginForm {
-  max-width: 300px;
-}
+/* .loginForm {
+  max-width: 300px; 
+} */
 .loginFormForgot {
   float: right;
 }
@@ -14,4 +14,16 @@
 }
 .loginFormBtn{
   width: 100%;
+}
+
+.loginError {
+  display: block;
+  padding: 20px;
+  border: 0.1px solid red;
+  border-radius: 4px;
+  background-color: hsla(0, 100%, 60%, 0.1);
+}
+
+.loginErrorText {
+  color: red;
 }

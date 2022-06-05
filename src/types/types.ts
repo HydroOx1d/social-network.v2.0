@@ -30,3 +30,9 @@ export type LoginValuesType = {
   remember: boolean;
   email: string;
 };
+
+
+export type HandleErrorType = {
+  status: boolean;
+  message: string;
+};
