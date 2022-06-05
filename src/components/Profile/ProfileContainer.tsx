@@ -37,7 +37,7 @@ const ProfileContainer: React.FC<ProfilePropsType> = ({ posts, getProfileDataThu
     }
     getProfileDataThunk(userId);
     getProfileStatusThunk(userId);
-  }, [userId])
+  }, [userId, id])
 
   return <Profile isOwn={!userId} posts={posts} {...props} />;
 };
