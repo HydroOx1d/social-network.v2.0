@@ -1,15 +1,17 @@
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
-import { ProfileDataType } from '../../types/types';
+import { ProfileDataType,  ProfileDataPhotosType } from '../../types/types';
 import { profileRequests, meaningOfResultCodes } from '../../api/api';
-import { AppStateType } from '../../store/store';
+import { AppStateType } from "../../store/store";
 
 export const getProfileDataThunk = createAsyncThunk("profile/getProfileDataThunk", async (userId: string | undefined, {dispatch}) => {
   const data = await profileRequests.getProfileData(userId);
+
   dispatch(setProfileData(data));
 });
 
 export const getProfileStatusThunk = createAsyncThunk("profile/getProfileStatusThunk", async (userId: undefined | string | null, {dispatch}) => {
   const data = await profileRequests.getProfileStatus(userId);
+
   dispatch(setStatus(data));
 });
 
@@ -18,8 +20,18 @@ export const updateProfileStatusThunk = createAsyncThunk(
   async (status: string, {dispatch, getState}) => {
     const state = getState() as AppStateType
     const data = await profileRequests.updateProfileStatus(status);
+
     if(data.resultCode === meaningOfResultCodes.Success) {
       dispatch(getProfileStatusThunk(state.auth.id?.toString()))
+    }
+  }
+);
+
+export const updateProfileAvatarThunk = createAsyncThunk(
+  "profile/updateProfileAvatarThunk", async (imageFile: string | Blob, {dispatch}) => {
+    const data = await profileRequests.updateProfileAvatar(imageFile);
+    if(data.resultCode === meaningOfResultCodes.Success) {
+      dispatch(setAvatar(data.data.photos))
     }
   }
 );
@@ -55,6 +67,11 @@ const profileSlice = createSlice({
     },
     setStatus: (state: InitialStateType, action: PayloadAction<string>) => {
       state.status = action.payload
+    },
+    setAvatar: (state: InitialStateType, action: PayloadAction<ProfileDataPhotosType>) => {
+      if(state.profileData !== null) { 
+        state.profileData.photos = action.payload;
+      };
     }
   },
   extraReducers: {
@@ -69,5 +86,5 @@ const profileSlice = createSlice({
 });
 
 
-export const { addPost, setProfileData, setStatus } = profileSlice.actions;
+export const { addPost, setProfileData, setStatus, setAvatar } = profileSlice.actions;
 export default profileSlice.reducer

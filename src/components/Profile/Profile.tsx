@@ -1,7 +1,7 @@
 import React from 'react'
 import profile from './Profile.module.css'
 import { Avatar } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { UserOutlined, EditOutlined } from '@ant-design/icons'
 import ProfileAddPostContainer from './ProfileAddPost/ProfileAddPostContainer';
 import { PostsType } from '../../features/profile/profileSlice';
 import { ProfileDataType } from '../../types/types';
@@ -9,11 +9,21 @@ import ProfileStatusContainer from './ProfileStatus/ProfileStatusContainer';
 
 type PropsType = {
   posts: Array<PostsType>;
-  profileData: ProfileDataType | null
-  isOwn: boolean
+  profileData: ProfileDataType | null;
+  isOwn: boolean;
+
+  updateProfileAvatarThunk: (imageFile: string | Blob) => void
 };
 
-const Profile: React.FC<PropsType> = ({ posts, profileData, isOwn }) => {
+const Profile: React.FC<PropsType> = ({ posts, profileData, isOwn, updateProfileAvatarThunk}) => {
+
+  const onUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.files?.[0]);
+    if(event.target.files !== null) {
+      updateProfileAvatarThunk(event.target.files[0]);
+    }
+  }
+
   return (
     <div className={profile.profile}>
       <div className={profile.leftSide}>
@@ -24,6 +34,10 @@ const Profile: React.FC<PropsType> = ({ posts, profileData, isOwn }) => {
             icon={<UserOutlined />}
             src={profileData?.photos.large}
           />
+          <div className={profile.editAvatar}>
+            <label htmlFor="editAvatar"><EditOutlined className={profile.editAvatarIcon}/></label>
+            <input type="file" id="editAvatar" onChange={onUpload}/>
+          </div>
         </div>
         <div className={profile.profileInfo}>
           <div className={profile.profileInfoHeader}>

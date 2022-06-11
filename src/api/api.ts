@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { UsersType } from '../features/users/usersSlice';
-import { LoginValuesType, ProfileDataType } from '../types/types';
+import { LoginValuesType, ProfileDataType, ProfileDataPhotosType } from '../types/types';
 
 let instanceOfAxios = axios.create({
   withCredentials: true,
@@ -69,6 +69,14 @@ export const authRequests = {
   }
 }
 
+type ImageFileResponse = {
+  resultCode: number;
+  messages: string[];
+  data: {
+    photos: ProfileDataPhotosType;
+  };
+};
+
 export const profileRequests = {
   getProfileData(userId: string | undefined) {
     return instanceOfAxios
@@ -82,5 +90,16 @@ export const profileRequests = {
   },
   updateProfileStatus(status: string) {
     return instanceOfAxios.put<StandartResponse>('/profile/status', {status}).then(res => res.data);
+  },
+  updateProfileAvatar(imageFile: string | Blob) {
+    let formData = new FormData();
+    
+    formData.append("upload_image", imageFile);
+
+    return instanceOfAxios.put<ImageFileResponse>("/profile/photo", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }).then(res => res.data);
   }
 };

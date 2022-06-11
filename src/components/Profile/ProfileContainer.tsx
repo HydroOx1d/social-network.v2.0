@@ -7,6 +7,7 @@ import {
   PostsType,
   getProfileDataThunk,
   getProfileStatusThunk,
+  updateProfileAvatarThunk,
 } from "../../features/profile/profileSlice";
 import { useNavigate, useParams } from 'react-router-dom';
 import { ProfileDataType } from '../../types/types';
@@ -20,6 +21,7 @@ type MapStateToPropsType = {
 type MapDispatchToProps = {
   getProfileDataThunk: (userId: undefined | string) => void;
   getProfileStatusThunk: (userId: null | undefined | string) => void;
+  updateProfileAvatarThunk: (imageFile: string | Blob) => void
 };
 
 export type ProfilePropsType = MapStateToPropsType & MapDispatchToProps
@@ -51,5 +53,8 @@ const mapStateToProps = (state: AppStateType): MapStateToPropsType => {
 };
 
 export default compose(
-  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {getProfileDataThunk, getProfileStatusThunk}),
+  connect<MapStateToPropsType, MapDispatchToProps, {}, AppStateType>(
+    mapStateToProps,
+    { getProfileDataThunk, getProfileStatusThunk, updateProfileAvatarThunk }
+  )
 )(ProfileContainer);

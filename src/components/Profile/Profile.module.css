@@ -5,6 +5,30 @@
 .leftSide {
   flex: 0 1 30%;
 }
+
+.profileAvatar {
+  position: relative;
+  display: inline-block;
+}
+
+/* .editAvatar {} */
+.editAvatar input{
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.editAvatarIcon {
+  cursor: pointer;
+  font-size: 25px;
+  position: absolute;
+  right: -15px;
+  bottom: -15px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 50%;
+}
+
 .rightSide {
   flex: 0 1 70%;
 }
