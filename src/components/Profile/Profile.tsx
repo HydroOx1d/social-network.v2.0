@@ -18,7 +18,6 @@ type PropsType = {
 const Profile: React.FC<PropsType> = ({ posts, profileData, isOwn, updateProfileAvatarThunk}) => {
 
   const onUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.files?.[0]);
     if(event.target.files !== null) {
       updateProfileAvatarThunk(event.target.files[0]);
     }
